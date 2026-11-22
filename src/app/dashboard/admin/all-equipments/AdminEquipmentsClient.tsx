@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Equipment } from "@/types";
@@ -17,6 +17,35 @@ export default function AdminEquipmentsClient({
 }: AdminEquipmentsClientProps) {
   const [equipments, setEquipments] = useState(initialEquipments);
   const [processingId, setProcessingId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (initialEquipments && initialEquipments.length > 0) {
+      setEquipments(initialEquipments);
+    } else {
+      const fetchEquipments = async () => {
+        try {
+          const sessionRes = await (authClient as any).getSession();
+          const token = sessionRes?.data?.session?.token;
+          const liveUrl =
+            process.env.NEXT_PUBLIC_API_URL && !process.env.NEXT_PUBLIC_API_URL.includes("localhost")
+              ? process.env.NEXT_PUBLIC_API_URL
+              : "https://equip-rent-server-sepia.vercel.app";
+          const res = await fetch(`${liveUrl}/api/equipments?status=all&limit=100`, {
+            headers: {
+              ...(token ? { Authorization: `Bearer ${token}` } : {}),
+            },
+            credentials: "include",
+          });
+          if (res.ok) {
+            const data = await res.json();
+            const list = Array.isArray(data) ? data : (data.equipments || data.items || []);
+            if (list.length > 0) setEquipments(list);
+          }
+        } catch {}
+      };
+      fetchEquipments();
+    }
+  }, [initialEquipments]);
 
   const handleStatusUpdate = async (id: string, newStatus: string) => {
     setProcessingId(id);

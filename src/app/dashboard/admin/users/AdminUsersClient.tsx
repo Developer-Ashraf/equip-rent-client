@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { User, Shield, CheckCircle, Mail, Calendar } from "lucide-react";
 import toast from "react-hot-toast";
 import { authClient } from "@/lib/auth-client";
@@ -12,6 +12,35 @@ interface AdminUsersClientProps {
 export default function AdminUsersClient({ initialUsers }: AdminUsersClientProps) {
   const [users, setUsers] = useState(initialUsers);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (initialUsers && initialUsers.length > 0) {
+      setUsers(initialUsers);
+    } else {
+      const fetchUsers = async () => {
+        try {
+          const sessionRes = await (authClient as any).getSession();
+          const token = sessionRes?.data?.session?.token;
+          const liveUrl =
+            process.env.NEXT_PUBLIC_API_URL && !process.env.NEXT_PUBLIC_API_URL.includes("localhost")
+              ? process.env.NEXT_PUBLIC_API_URL
+              : "https://equip-rent-server-sepia.vercel.app";
+          const res = await fetch(`${liveUrl}/api/admin/users`, {
+            headers: {
+              ...(token ? { Authorization: `Bearer ${token}` } : {}),
+            },
+            credentials: "include",
+          });
+          if (res.ok) {
+            const data = await res.json();
+            const list = Array.isArray(data) ? data : (data.users || data.items || []);
+            if (list.length > 0) setUsers(list);
+          }
+        } catch {}
+      };
+      fetchUsers();
+    }
+  }, [initialUsers]);
 
   const handleRoleChange = async (userId: string, newRole: string) => {
     setUpdatingId(userId);

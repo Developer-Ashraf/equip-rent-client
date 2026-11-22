@@ -23,7 +23,15 @@ export const getToken = async () => {
   }
 };
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "https://equip-rent-server-sepia.vercel.app";
+export const getApiUrl = () => {
+  const envUrl = process.env.NEXT_PUBLIC_API_URL;
+  if (envUrl && !envUrl.includes("localhost") && !envUrl.includes("127.0.0.1")) {
+    return envUrl;
+  }
+  return "https://equip-rent-server-sepia.vercel.app";
+};
+
+const API_BASE = getApiUrl();
 
 export const authFetch = async (endpoint: string, options: RequestInit = {}) => {
   const token = await getToken();

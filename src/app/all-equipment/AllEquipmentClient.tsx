@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Equipment } from "@/types";
 import EquipmentCard from "@/components/equipment/EquipmentCard";
@@ -27,6 +27,31 @@ export default function AllEquipmentClient({
   const [selectedRentalType, setSelectedRentalType] = useState(searchParams.get("rentalType") || "all");
   const [selectedAvailability, setSelectedAvailability] = useState(searchParams.get("availability") || "all");
   const [selectedSort, setSelectedSort] = useState(searchParams.get("sort") || "recent");
+
+  const [equipmentsList, setEquipmentsList] = useState<Equipment[]>(initialEquipments);
+  const [totalCount, setTotalCount] = useState<number>(total);
+
+  useEffect(() => {
+    if (initialEquipments && initialEquipments.length > 0) {
+      setEquipmentsList(initialEquipments);
+      setTotalCount(total);
+    } else {
+      const liveUrl =
+        process.env.NEXT_PUBLIC_API_URL && !process.env.NEXT_PUBLIC_API_URL.includes("localhost")
+          ? process.env.NEXT_PUBLIC_API_URL
+          : "https://equip-rent-server-sepia.vercel.app";
+      fetch(`${liveUrl}/api/equipments`)
+        .then((r) => r.json())
+        .then((data) => {
+          const items = data.items || data.equipments || (Array.isArray(data) ? data : []);
+          if (items.length > 0) {
+            setEquipmentsList(items);
+            setTotalCount(data.total || items.length);
+          }
+        })
+        .catch(() => {});
+    }
+  }, [initialEquipments, total]);
 
   const categories = [
     "All Categories",
@@ -68,7 +93,7 @@ export default function AllEquipmentClient({
             Browse All Available Equipment
           </h1>
           <p className="text-slate-500 text-sm mt-1">
-            Showing {total} approved industrial and creative machines
+            Showing {totalCount} approved industrial and creative machines
           </p>
         </div>
 
@@ -178,9 +203,9 @@ export default function AllEquipmentClient({
         </div>
 
         {/* 3-Column Responsive Grid as specified in Requirements */}
-        {initialEquipments.length > 0 ? (
+        {equipmentsList.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {initialEquipments.map((equipment) => (
+            {equipmentsList.map((equipment) => (
               <EquipmentCard key={equipment._id} equipment={equipment} />
             ))}
           </div>

@@ -1,3 +1,6 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Equipment } from "@/types";
 import EquipmentCard from "@/components/equipment/EquipmentCard";
@@ -8,6 +11,26 @@ interface FeaturedSectionProps {
 }
 
 export default function FeaturedSection({ equipments }: FeaturedSectionProps) {
+  const [list, setList] = useState<Equipment[]>(equipments);
+
+  useEffect(() => {
+    if (equipments && equipments.length > 0) {
+      setList(equipments);
+    } else {
+      const liveUrl =
+        process.env.NEXT_PUBLIC_API_URL && !process.env.NEXT_PUBLIC_API_URL.includes("localhost")
+          ? process.env.NEXT_PUBLIC_API_URL
+          : "https://equip-rent-server-sepia.vercel.app";
+      fetch(`${liveUrl}/api/equipments/featured`)
+        .then((r) => r.json())
+        .then((data) => {
+          const items = Array.isArray(data) ? data : (data.equipments || []);
+          if (items.length > 0) setList(items);
+        })
+        .catch(() => {});
+    }
+  }, [equipments]);
+
   return (
     <section className="py-20 bg-white border-b border-slate-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -34,7 +57,7 @@ export default function FeaturedSection({ equipments }: FeaturedSectionProps) {
 
         {/* 6 Grid Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {equipments.map((equipment) => (
+          {list.map((equipment) => (
             <EquipmentCard key={equipment._id} equipment={equipment} />
           ))}
         </div>

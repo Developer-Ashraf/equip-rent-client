@@ -2,6 +2,7 @@ export const dynamic = "force-dynamic";
 
 import AllEquipmentClient from "./AllEquipmentClient";
 import { Equipment } from "@/types";
+import { getApiUrl } from "@/lib/server";
 
 interface PageProps {
   searchParams: Promise<{
@@ -16,7 +17,7 @@ interface PageProps {
 
 export default async function AllEquipmentPage({ searchParams }: PageProps) {
   const resolvedParams = await searchParams;
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://equip-rent-server-sepia.vercel.app";
+  const apiUrl = getApiUrl();
 
   const queryParams = new URLSearchParams();
   if (resolvedParams.search) queryParams.set("search", resolvedParams.search);
