@@ -41,9 +41,14 @@ export const auth = betterAuth({
   },
   socialProviders: {
     google: {
-      clientId: process.env.GOOGLE_CLIENT_ID || "mock_google_id",
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "mock_google_secret",
-      enabled: Boolean(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_ID !== "mock_google_id"),
+      clientId: process.env.GOOGLE_CLIENT_ID || "",
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+      enabled: Boolean(process.env.GOOGLE_CLIENT_ID && !process.env.GOOGLE_CLIENT_ID.includes("mock")),
+    },
+    github: {
+      clientId: process.env.GITHUB_CLIENT_ID || "",
+      clientSecret: process.env.GITHUB_CLIENT_SECRET || "",
+      enabled: Boolean(process.env.GITHUB_CLIENT_ID && !process.env.GITHUB_CLIENT_ID.includes("mock")),
     },
   },
   database: mongodbAdapter(db, {
