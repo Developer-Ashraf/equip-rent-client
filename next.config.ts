@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  serverExternalPackages: ["@better-auth/mongo-adapter", "mongodb"],
   typescript: {
     ignoreBuildErrors: true,
   },
