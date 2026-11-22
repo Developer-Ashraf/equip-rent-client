@@ -5,7 +5,22 @@ import { mongodbAdapter } from "@better-auth/mongo-adapter";
 const defaultUri =
   "mongodb://equip-rent-admin:EquipRent2026%23Secure@ac-m0gvdxt-shard-00-00.i3lu0gl.mongodb.net:27017,ac-m0gvdxt-shard-00-01.i3lu0gl.mongodb.net:27017,ac-m0gvdxt-shard-00-02.i3lu0gl.mongodb.net:27017/equip_rent_db?ssl=true&replicaSet=atlas-ccvxfd-shard-0&authSource=admin&retryWrites=true&w=majority";
 
-const client = new MongoClient(process.env.BETTER_AUTH_DB_URI || defaultUri);
+const uri = process.env.BETTER_AUTH_DB_URI || defaultUri;
+
+declare global {
+  var _mongoAuthClient: MongoClient | undefined;
+}
+
+let client: MongoClient;
+if (process.env.NODE_ENV === "production") {
+  client = new MongoClient(uri);
+} else {
+  if (!global._mongoAuthClient) {
+    global._mongoAuthClient = new MongoClient(uri);
+  }
+  client = global._mongoAuthClient;
+}
+
 const db = client.db(process.env.DB_NAME || "equip_rent_db");
 
 export const auth = betterAuth({
