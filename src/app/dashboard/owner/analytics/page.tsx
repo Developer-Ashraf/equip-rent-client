@@ -16,7 +16,15 @@ export default async function OwnerAnalyticsPage() {
     const res = await authFetch("/api/owner/analytics");
     if (res.ok) {
       const data = await res.json();
-      stats = data.analytics || stats;
+      const payload = data.analytics || data;
+      stats = {
+        totalRevenue: payload.totalRevenue ?? payload.totalEarnings ?? 0,
+        totalListings: payload.totalListings ?? payload.totalListed ?? 0,
+        completedRentals: payload.completedRentals ?? 0,
+        totalBookings: payload.totalBookings ?? payload.totalOwnerBookings ?? 0,
+        monthlyData: payload.monthlyData || [],
+        categoryDistribution: payload.categoryDistribution || [],
+      };
     }
   } catch (error) {
     console.error("Failed to load owner analytics:", error);

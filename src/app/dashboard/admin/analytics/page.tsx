@@ -16,7 +16,15 @@ export default async function AdminAnalyticsPage() {
     const res = await authFetch("/api/admin/analytics");
     if (res.ok) {
       const data = await res.json();
-      stats = data.analytics || stats;
+      const payload = data.analytics || data;
+      stats = {
+        totalUsers: payload.totalUsers ?? 0,
+        totalEquipments: payload.totalEquipments ?? 0,
+        totalBookings: payload.totalBookings ?? 0,
+        totalRevenue: payload.totalRevenue ?? 0,
+        monthlyData: payload.monthlyData || payload.monthlyStats || [],
+        roleDistribution: payload.roleDistribution || [],
+      };
     }
   } catch (error) {
     console.error("Failed to load admin analytics:", error);
