@@ -26,7 +26,7 @@ export default function CheckoutSuccessPage() {
       }
 
       try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
         const res = await fetch(`${apiUrl}/api/payments/verify`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -98,7 +98,9 @@ export default function CheckoutSuccessPage() {
                 </div>
                 <div className="flex justify-between font-semibold text-slate-600">
                   <span>Rental Period:</span>
-                  <span>{new Date(booking.startDate).toLocaleDateString()} - {new Date(booking.endDate).toLocaleDateString()}</span>
+                  <span>
+                    {booking.rentalStartDate || booking.startDate ? new Date(booking.rentalStartDate || booking.startDate).toLocaleDateString() : 'N/A'} - {booking.rentalEndDate || booking.endDate ? new Date(booking.rentalEndDate || booking.endDate).toLocaleDateString() : 'N/A'}
+                  </span>
                 </div>
               </div>
             )}
