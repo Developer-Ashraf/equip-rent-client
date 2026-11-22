@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { getSession } from "@/lib/server";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import ProfileClient from "@/components/dashboard/ProfileClient";

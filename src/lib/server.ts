@@ -1,35 +1,42 @@
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
-import { redirect } from "next/navigation";
 
 export const getSession = async () => {
   "use server";
   try {
+    const h = await headers();
     const session = await auth.api.getSession({
-      headers: await headers(),
+      headers: h,
     });
     return session;
   } catch (error) {
-    console.error("Error fetching session:", error);
     return null;
   }
 };
 
 export const getToken = async () => {
-  const session = await getSession();
-  if (!session || !session.session?.token) {
-    redirect("/login");
+  try {
+    const session = await getSession();
+    return session?.session?.token || null;
+  } catch (error) {
+    return null;
   }
-  return session.session.token;
 };
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
 
 export const authFetch = async (endpoint: string, options: RequestInit = {}) => {
   const token = await getToken();
+  if (!token) {
+    return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      status: 401,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
   const url = endpoint.startsWith("http") ? endpoint : `${API_BASE}${endpoint}`;
 
-  const res = await fetch(url, {
+  return fetch(url, {
     ...options,
     headers: {
       "Content-Type": "application/json",
@@ -38,16 +45,6 @@ export const authFetch = async (endpoint: string, options: RequestInit = {}) => 
     },
     cache: "no-store",
   });
-
-  if (res.status === 401) {
-    redirect("/login");
-  }
-
-  if (res.status === 403) {
-    redirect("/unauthorized");
-  }
-
-  return res;
 };
 
 export const publicFetch = async (endpoint: string, options: RequestInit = {}) => {
@@ -58,6 +55,6 @@ export const publicFetch = async (endpoint: string, options: RequestInit = {}) =
       "Content-Type": "application/json",
       ...options.headers,
     },
-    next: { revalidate: 60 },
+    cache: "no-store",
   });
 };

@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { authFetch } from "@/lib/server";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import { Booking } from "@/types";

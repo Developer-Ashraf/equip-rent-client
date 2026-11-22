@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { getSession } from "@/lib/server";
 import { redirect, notFound } from "next/navigation";
 import EquipmentDetailsClient from "./EquipmentDetailsClient";

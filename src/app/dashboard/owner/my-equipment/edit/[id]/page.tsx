@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { authFetch } from "@/lib/server";
 import { notFound } from "next/navigation";
 import EditEquipmentClient from "./EditEquipmentClient";
