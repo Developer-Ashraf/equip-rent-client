@@ -11,7 +11,7 @@ export default async function OwnerRentalsPage() {
     const res = await authFetch("/api/owner/my-rentals");
     if (res.ok) {
       const data = await res.json();
-      rentals = data.rentals || [];
+      rentals = Array.isArray(data) ? data : (data.rentals || data.items || []);
     }
   } catch (error) {
     console.error("Failed to load owner rentals:", error);

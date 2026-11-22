@@ -11,7 +11,7 @@ export default async function CustomerRentalsPage() {
     const res = await authFetch("/api/customer/my-rentals");
     if (res.ok) {
       const data = await res.json();
-      rentals = data.rentals || [];
+      rentals = Array.isArray(data) ? data : (data.rentals || data.items || []);
     }
   } catch (error) {
     console.error("Failed to load customer rentals:", error);
@@ -63,12 +63,12 @@ export default async function CustomerRentalsPage() {
                     </td>
                     <td className="py-4 px-6 whitespace-nowrap">
                       <div className="text-slate-800">
-                        {new Date(rental.startDate).toLocaleDateString()} -{" "}
-                        {new Date(rental.endDate).toLocaleDateString()}
+                        {new Date(rental.startDate || (rental as any).rentalStartDate).toLocaleDateString()} -{" "}
+                        {new Date(rental.endDate || (rental as any).rentalEndDate).toLocaleDateString()}
                       </div>
                     </td>
                     <td className="py-4 px-6 font-bold text-slate-900">
-                      {rental.quantity} unit{rental.quantity > 1 ? "s" : ""}
+                      {rental.quantity || (rental as any).requiredQuantity || 1} unit{(rental.quantity || (rental as any).requiredQuantity || 1) > 1 ? "s" : ""}
                     </td>
                     <td className="py-4 px-6 font-extrabold text-slate-900">
                       ${rental.totalAmount?.toLocaleString()}

@@ -10,7 +10,7 @@ export default async function AdminAllRentalsPage() {
     const res = await authFetch("/api/admin/all-rentals");
     if (res.ok) {
       const data = await res.json();
-      rentals = data.rentals || [];
+      rentals = Array.isArray(data) ? data : (data.rentals || data.items || []);
     }
   } catch (error) {
     console.error("Failed to load admin all rentals:", error);
