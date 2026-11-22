@@ -14,10 +14,18 @@ export const auth = betterAuth({
     requireEmailVerification: false,
     autoSignIn: true,
   },
+  trustedOrigins: [
+    "http://localhost:3000",
+    "http://localhost:3001",
+    "http://localhost:3002",
+    "http://127.0.0.1:3000",
+    "http://127.0.0.1:3001",
+    "http://127.0.0.1:3002",
+  ],
   user: {
     additionalFields: {
       role: {
-        type: ["customer", "owner", "admin"],
+        type: "string",
         input: true,
         defaultValue: "customer",
       },
@@ -46,5 +54,5 @@ export const auth = betterAuth({
     process.env.BETTER_AUTH_URL ||
     (process.env.VERCEL_URL
       ? `https://${process.env.VERCEL_URL}`
-      : "http://localhost:3000"),
+      : "http://localhost:3001"),
 });
