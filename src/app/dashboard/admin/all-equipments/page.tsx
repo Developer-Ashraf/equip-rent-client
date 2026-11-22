@@ -10,7 +10,7 @@ export default async function AdminAllEquipmentsPage() {
     const res = await authFetch("/api/equipments?status=all&limit=100");
     if (res.ok) {
       const data = await res.json();
-      equipments = data.equipments || [];
+      equipments = Array.isArray(data) ? data : (data.equipments || data.items || []);
     }
   } catch (error) {
     console.error("Failed to load all equipment for admin:", error);
