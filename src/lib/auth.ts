@@ -11,14 +11,9 @@ declare global {
   var _mongoAuthClient: MongoClient | undefined;
 }
 
-let client: MongoClient;
-if (process.env.NODE_ENV === "production") {
-  client = new MongoClient(uri);
-} else {
-  if (!global._mongoAuthClient) {
-    global._mongoAuthClient = new MongoClient(uri);
-  }
-  client = global._mongoAuthClient;
+const client: MongoClient = global._mongoAuthClient || new MongoClient(uri);
+if (!global._mongoAuthClient) {
+  global._mongoAuthClient = client;
 }
 
 const db = client.db(process.env.DB_NAME || "equip_rent_db");

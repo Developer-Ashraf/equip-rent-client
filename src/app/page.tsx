@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import Hero from "@/components/home/Hero";
 import CategoriesSection from "@/components/home/CategoriesSection";
 import FeaturedSection from "@/components/home/FeaturedSection";

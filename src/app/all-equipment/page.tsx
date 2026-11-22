@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import AllEquipmentClient from "./AllEquipmentClient";
 import { Equipment } from "@/types";
 
