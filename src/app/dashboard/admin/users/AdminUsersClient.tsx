@@ -20,7 +20,7 @@ export default function AdminUsersClient({ initialUsers }: AdminUsersClientProps
       const sessionRes = await (authClient as any).getSession();
       const token = sessionRes?.data?.session?.token;
 
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://equip-rent-server-sepia.vercel.app";
       const res = await fetch(`${apiUrl}/api/admin/users/${userId}/role`, {
         method: "PUT",
         headers: {

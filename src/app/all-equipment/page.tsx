@@ -16,7 +16,7 @@ interface PageProps {
 
 export default async function AllEquipmentPage({ searchParams }: PageProps) {
   const resolvedParams = await searchParams;
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://equip-rent-server-sepia.vercel.app";
 
   const queryParams = new URLSearchParams();
   if (resolvedParams.search) queryParams.set("search", resolvedParams.search);

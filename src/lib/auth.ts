@@ -31,6 +31,7 @@ export const auth = betterAuth({
     "http://127.0.0.1:3000",
     "http://127.0.0.1:3001",
     "http://127.0.0.1:3002",
+    "https://equip-rent-client-nine.vercel.app",
     process.env.NEXT_PUBLIC_APP_URL,
     process.env.BETTER_AUTH_URL,
     ...(process.env.VERCEL_URL ? [`https://${process.env.VERCEL_URL}`] : []),
@@ -70,7 +71,8 @@ export const auth = betterAuth({
   secret: process.env.BETTER_AUTH_SECRET || "equiprent_super_secret_auth_key_2026_secure",
   baseURL:
     process.env.BETTER_AUTH_URL ||
+    process.env.NEXT_PUBLIC_APP_URL ||
     (process.env.VERCEL_URL
       ? `https://${process.env.VERCEL_URL}`
-      : "http://localhost:3001"),
+      : "https://equip-rent-client-nine.vercel.app"),
 });

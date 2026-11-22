@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { signIn } from "@/lib/auth-client";
+import { signIn, loginWithSocial } from "@/lib/auth-client";
 import toast from "react-hot-toast";
 import { Wrench, Loader2 } from "lucide-react";
 import { Suspense } from "react";
@@ -48,26 +48,12 @@ function LoginForm() {
     }
   };
 
-  const handleGoogleLogin = async () => {
-    try {
-      await signIn.social({
-        provider: "google",
-        callbackURL: callbackUrl,
-      });
-    } catch (e: any) {
-      toast.error("Google sign in failed. Please check credentials.");
-    }
+  const handleGoogleLogin = () => {
+    loginWithSocial("google", callbackUrl);
   };
 
-  const handleGithubLogin = async () => {
-    try {
-      await signIn.social({
-        provider: "github",
-        callbackURL: callbackUrl,
-      });
-    } catch (e: any) {
-      toast.error("GitHub sign in failed. Please check credentials.");
-    }
+  const handleGithubLogin = () => {
+    loginWithSocial("github", callbackUrl);
   };
 
   return (

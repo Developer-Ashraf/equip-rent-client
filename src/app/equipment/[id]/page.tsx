@@ -12,7 +12,7 @@ interface PageProps {
 export default async function EquipmentDetailsPage({ params }: PageProps) {
   const { id } = await params;
 
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://equip-rent-server-sepia.vercel.app";
   let equipment: Equipment | null = null;
 
   try {

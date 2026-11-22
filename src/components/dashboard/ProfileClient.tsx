@@ -25,7 +25,7 @@ export default function ProfileClient({ user }: ProfileClientProps) {
       const token = sessionRes?.data?.session?.token;
 
       // We can update user info via an API or auth update
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://equip-rent-server-sepia.vercel.app";
       const res = await fetch(`${apiUrl}/api/user/profile`, {
         method: "PUT",
         headers: {

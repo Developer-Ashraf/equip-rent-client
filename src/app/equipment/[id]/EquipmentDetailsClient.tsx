@@ -47,7 +47,7 @@ export default function EquipmentDetailsClient({
 
     setIsFavoriteLoading(true);
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://equip-rent-server-sepia.vercel.app";
       const res = await fetch(`${apiUrl}/api/favorites`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },

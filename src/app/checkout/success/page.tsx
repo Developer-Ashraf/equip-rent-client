@@ -26,7 +26,7 @@ function CheckoutSuccessContent() {
       }
 
       try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://equip-rent-server-sepia.vercel.app";
         const res = await fetch(`${apiUrl}/api/payments/verify`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },

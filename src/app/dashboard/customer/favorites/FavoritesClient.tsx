@@ -17,7 +17,7 @@ export default function FavoritesClient({ initialFavorites }: FavoritesClientPro
   const handleRemove = async (equipmentId: string) => {
     setRemovingId(equipmentId);
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://equip-rent-server-sepia.vercel.app";
       const res = await fetch(`${apiUrl}/api/favorites/${equipmentId}`, {
         method: "DELETE",
         credentials: "include",

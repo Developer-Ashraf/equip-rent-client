@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { signUp, signIn } from "@/lib/auth-client";
+import { signUp, signIn, loginWithSocial } from "@/lib/auth-client";
 import toast from "react-hot-toast";
 import { Wrench, ArrowRight, Loader2, UserCheck } from "lucide-react";
 
@@ -178,7 +178,7 @@ export default function RegisterPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <button
               type="button"
-              onClick={() => signIn.social({ provider: "google", callbackURL: "/" })}
+              onClick={() => loginWithSocial("google", "/")}
               className="w-full flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-bold transition-colors cursor-pointer"
             >
               <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24">
@@ -192,7 +192,7 @@ export default function RegisterPage() {
 
             <button
               type="button"
-              onClick={() => signIn.social({ provider: "github", callbackURL: "/" })}
+              onClick={() => loginWithSocial("github", "/")}
               className="w-full flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-bold transition-colors cursor-pointer"
             >
               <svg className="w-4 h-4 flex-shrink-0 fill-current" viewBox="0 0 24 24">
