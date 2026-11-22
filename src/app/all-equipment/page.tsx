@@ -35,7 +35,7 @@ export default async function AllEquipmentPage({ searchParams }: PageProps) {
     });
     if (res.ok) {
       const data = await res.json();
-      equipments = data.equipments || [];
+      equipments = data.items || data.equipments || [];
       total = data.total || 0;
       page = data.page || 1;
       totalPages = data.totalPages || 1;

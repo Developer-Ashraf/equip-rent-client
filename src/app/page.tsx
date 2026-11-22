@@ -13,7 +13,8 @@ export default async function HomePage() {
   try {
     const res = await publicFetch("/api/equipments/featured");
     if (res.ok) {
-      featuredEquipments = await res.json();
+      const data = await res.json();
+      featuredEquipments = Array.isArray(data) ? data : (data.equipments || []);
     }
   } catch (error) {
     console.error("Failed to load featured equipments:", error);

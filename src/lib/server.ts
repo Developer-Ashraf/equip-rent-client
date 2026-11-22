@@ -23,7 +23,7 @@ export const getToken = async () => {
   return session.session.token;
 };
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
 
 export const authFetch = async (endpoint: string, options: RequestInit = {}) => {
   const token = await getToken();
