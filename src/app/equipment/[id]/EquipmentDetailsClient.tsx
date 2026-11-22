@@ -25,11 +25,13 @@ import toast from "react-hot-toast";
 interface EquipmentDetailsClientProps {
   equipment: Equipment;
   user: any | null;
+  userToken?: string;
 }
 
 export default function EquipmentDetailsClient({
   equipment,
   user,
+  userToken,
 }: EquipmentDetailsClientProps) {
   const router = useRouter();
   const [isBookingOpen, setIsBookingOpen] = useState(false);
@@ -304,6 +306,7 @@ export default function EquipmentDetailsClient({
         equipment={equipment}
         isOpen={isBookingOpen}
         onClose={() => setIsBookingOpen(false)}
+        userToken={userToken}
       />
     </div>
   );

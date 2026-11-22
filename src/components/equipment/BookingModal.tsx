@@ -74,7 +74,7 @@ export default function BookingModal({
     setIsLoading(true);
 
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
       const res = await fetch(`${apiUrl}/api/bookings/create-checkout-session`, {
         method: "POST",
         headers: {
@@ -84,12 +84,21 @@ export default function BookingModal({
         credentials: "include",
         body: JSON.stringify({
           equipmentId: equipment._id,
+          equipmentName: equipment.name,
+          equipmentImage: equipment.image,
+          rentalPrice: equipment.price ?? equipment.rentalPrice ?? 0,
+          rentalType: equipment.rentalType,
           startDate,
           endDate,
+          rentalStartDate: startDate,
+          rentalEndDate: endDate,
           quantity: Number(quantity),
+          requiredQuantity: Number(quantity),
           deliveryAddress,
           phone,
+          contactNumber: phone,
           notes,
+          additionalNotes: notes,
         }),
       });
 

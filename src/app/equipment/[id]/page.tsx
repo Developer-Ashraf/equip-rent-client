@@ -36,5 +36,11 @@ export default async function EquipmentDetailsPage({ params }: PageProps) {
     redirect(`/login?callbackUrl=/equipment/${id}`);
   }
 
-  return <EquipmentDetailsClient equipment={equipment} user={session.user} />;
+  return (
+    <EquipmentDetailsClient
+      equipment={equipment}
+      user={session.user}
+      userToken={session.session?.token}
+    />
+  );
 }
