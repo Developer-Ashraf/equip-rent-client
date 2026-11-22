@@ -61,51 +61,54 @@ export default function AdminUsersClient({ initialUsers }: AdminUsersClientProps
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100 font-medium text-slate-700">
-            {users.map((user) => (
-              <tr key={user._id} className="hover:bg-slate-50/50 transition-colors">
-                <td className="py-4 px-6">
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center font-black text-slate-700 text-xs">
-                      {user.name?.[0]?.toUpperCase() || "U"}
+            {users.map((user) => {
+              const uId = user._id || user.id;
+              return (
+                <tr key={uId} className="hover:bg-slate-50/50 transition-colors">
+                  <td className="py-4 px-6">
+                    <div className="flex items-center gap-3">
+                      <div className="w-9 h-9 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center font-black text-slate-700 text-xs">
+                        {user.name?.[0]?.toUpperCase() || "U"}
+                      </div>
+                      <span className="font-bold text-slate-900 text-sm">
+                        {user.name || "Unnamed"}
+                      </span>
                     </div>
-                    <span className="font-bold text-slate-900 text-sm">
-                      {user.name || "Unnamed"}
+                  </td>
+                  <td className="py-4 px-6 text-slate-600 font-semibold">
+                    {user.email}
+                  </td>
+                  <td className="py-4 px-6 text-slate-400">
+                    {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : "Active Member"}
+                  </td>
+                  <td className="py-4 px-6">
+                    <span
+                      className={`inline-block px-2.5 py-1 rounded-md text-[10px] font-black uppercase tracking-wider ${
+                        user.role === "admin"
+                          ? "bg-rose-100 text-rose-700"
+                          : user.role === "owner"
+                          ? "bg-purple-100 text-purple-700"
+                          : "bg-blue-100 text-blue-700"
+                      }`}
+                    >
+                      {user.role || "customer"}
                     </span>
-                  </div>
-                </td>
-                <td className="py-4 px-6 text-slate-600 font-semibold">
-                  {user.email}
-                </td>
-                <td className="py-4 px-6 text-slate-400">
-                  {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : "Active Member"}
-                </td>
-                <td className="py-4 px-6">
-                  <span
-                    className={`inline-block px-2.5 py-1 rounded-md text-[10px] font-black uppercase tracking-wider ${
-                      user.role === "admin"
-                        ? "bg-rose-100 text-rose-700"
-                        : user.role === "owner"
-                        ? "bg-purple-100 text-purple-700"
-                        : "bg-blue-100 text-blue-700"
-                    }`}
-                  >
-                    {user.role || "customer"}
-                  </span>
-                </td>
-                <td className="py-4 px-6 text-right">
-                  <select
-                    disabled={updatingId === user._id}
-                    value={user.role || "customer"}
-                    onChange={(e) => handleRoleChange(user._id, e.target.value)}
-                    className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-bold text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-orange-600 disabled:opacity-50 cursor-pointer"
-                  >
-                    <option value="customer">Customer</option>
-                    <option value="owner">Owner</option>
-                    <option value="admin">Admin</option>
-                  </select>
-                </td>
-              </tr>
-            ))}
+                  </td>
+                  <td className="py-4 px-6 text-right">
+                    <select
+                      disabled={updatingId === uId}
+                      value={user.role || "customer"}
+                      onChange={(e) => handleRoleChange(uId, e.target.value)}
+                      className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-bold text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-orange-600 disabled:opacity-50 cursor-pointer"
+                    >
+                      <option value="customer">Customer</option>
+                      <option value="owner">Owner</option>
+                      <option value="admin">Admin</option>
+                    </select>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>

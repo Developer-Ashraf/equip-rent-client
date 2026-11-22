@@ -9,7 +9,7 @@ export default async function AdminUsersPage() {
     const res = await authFetch("/api/admin/users");
     if (res.ok) {
       const data = await res.json();
-      users = data.users || [];
+      users = Array.isArray(data) ? data : (data.users || data.items || []);
     }
   } catch (error) {
     console.error("Failed to load users:", error);
