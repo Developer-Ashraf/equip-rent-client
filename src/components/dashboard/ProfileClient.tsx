@@ -21,7 +21,7 @@ export default function ProfileClient({ user }: ProfileClientProps) {
     setIsSaving(true);
 
     try {
-      const sessionRes = await authClient.getSession();
+      const sessionRes = await (authClient as any).getSession();
       const token = sessionRes?.data?.session?.token;
 
       // We can update user info via an API or auth update

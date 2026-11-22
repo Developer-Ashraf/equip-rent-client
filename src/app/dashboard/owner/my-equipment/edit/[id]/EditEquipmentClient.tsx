@@ -59,7 +59,7 @@ export default function EditEquipmentClient({
     setLoading(true);
 
     try {
-      const sessionRes = await authClient.getSession();
+      const sessionRes = await (authClient as any).getSession();
       const token = sessionRes?.data?.session?.token;
 
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
