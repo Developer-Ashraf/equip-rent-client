@@ -9,13 +9,8 @@ interface PageProps {
 
 export default async function EquipmentDetailsPage({ params }: PageProps) {
   const { id } = await params;
-  const session = await getSession();
 
-  if (!session?.user) {
-    redirect(`/login?callbackUrl=/equipment/${id}`);
-  }
-
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
   let equipment: Equipment | null = null;
 
   try {
@@ -25,7 +20,7 @@ export default async function EquipmentDetailsPage({ params }: PageProps) {
 
     if (res.ok) {
       const data = await res.json();
-      equipment = data.equipment;
+      equipment = data.equipment || data;
     }
   } catch (error) {
     console.error("Failed to load equipment details:", error);
@@ -33,6 +28,12 @@ export default async function EquipmentDetailsPage({ params }: PageProps) {
 
   if (!equipment) {
     notFound();
+  }
+
+  const session = await getSession();
+
+  if (!session?.user) {
+    redirect(`/login?callbackUrl=/equipment/${id}`);
   }
 
   return <EquipmentDetailsClient equipment={equipment} user={session.user} />;
