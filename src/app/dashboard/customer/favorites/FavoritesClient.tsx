@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Heart, Trash2, ExternalLink, ArrowRight } from "lucide-react";
 import toast from "react-hot-toast";
+import { getApiUrl } from "@/lib/api-config";
 
 interface FavoritesClientProps {
   initialFavorites: any[];
@@ -17,7 +18,7 @@ export default function FavoritesClient({ initialFavorites }: FavoritesClientPro
   const handleRemove = async (equipmentId: string) => {
     setRemovingId(equipmentId);
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://equip-rent-server-sepia.vercel.app";
+      const apiUrl = getApiUrl();
       const res = await fetch(`${apiUrl}/api/favorites/${equipmentId}`, {
         method: "DELETE",
         credentials: "include",

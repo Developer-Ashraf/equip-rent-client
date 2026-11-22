@@ -1,5 +1,8 @@
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
+import { getApiUrl } from "@/lib/api-config";
+
+export { getApiUrl };
 
 export const getSession = async () => {
   "use server";
@@ -23,14 +26,6 @@ export const getToken = async () => {
   }
 };
 
-export const getApiUrl = () => {
-  const envUrl = process.env.NEXT_PUBLIC_API_URL;
-  if (envUrl && !envUrl.includes("localhost") && !envUrl.includes("127.0.0.1")) {
-    return envUrl;
-  }
-  return "https://equip-rent-server-sepia.vercel.app";
-};
-
 const API_BASE = getApiUrl();
 
 export const authFetch = async (endpoint: string, options: RequestInit = {}) => {
@@ -42,7 +37,8 @@ export const authFetch = async (endpoint: string, options: RequestInit = {}) => 
     });
   }
 
-  const url = endpoint.startsWith("http") ? endpoint : `${API_BASE}${endpoint}`;
+  const base = getApiUrl();
+  const url = endpoint.startsWith("http") ? endpoint : `${base}${endpoint}`;
 
   return fetch(url, {
     ...options,
@@ -56,7 +52,8 @@ export const authFetch = async (endpoint: string, options: RequestInit = {}) => 
 };
 
 export const publicFetch = async (endpoint: string, options: RequestInit = {}) => {
-  const url = endpoint.startsWith("http") ? endpoint : `${API_BASE}${endpoint}`;
+  const base = getApiUrl();
+  const url = endpoint.startsWith("http") ? endpoint : `${base}${endpoint}`;
   return fetch(url, {
     ...options,
     headers: {

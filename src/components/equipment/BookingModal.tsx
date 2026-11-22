@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Equipment } from "@/types";
 import { X, Calendar, MapPin, Phone, FileText, AlertCircle, Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
+import { getApiUrl } from "@/lib/api-config";
 
 interface BookingModalProps {
   equipment: Equipment;
@@ -74,7 +75,7 @@ export default function BookingModal({
     setIsLoading(true);
 
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://equip-rent-server-sepia.vercel.app";
+      const apiUrl = getApiUrl();
       const res = await fetch(`${apiUrl}/api/bookings/create-checkout-session`, {
         method: "POST",
         headers: {

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { User, Mail, Shield, Phone, MapPin, CheckCircle, Save, Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
 import { authClient } from "@/lib/auth-client";
+import { getApiUrl } from "@/lib/api-config";
 
 interface ProfileClientProps {
   user: any;
@@ -25,7 +26,7 @@ export default function ProfileClient({ user }: ProfileClientProps) {
       const token = sessionRes?.data?.session?.token;
 
       // We can update user info via an API or auth update
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://equip-rent-server-sepia.vercel.app";
+      const apiUrl = getApiUrl();
       const res = await fetch(`${apiUrl}/api/user/profile`, {
         method: "PUT",
         headers: {

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Equipment } from "@/types";
 import EquipmentCard from "@/components/equipment/EquipmentCard";
 import { ArrowRight } from "lucide-react";
+import { getApiUrl } from "@/lib/api-config";
 
 interface FeaturedSectionProps {
   equipments: Equipment[];
@@ -17,10 +18,7 @@ export default function FeaturedSection({ equipments }: FeaturedSectionProps) {
     if (equipments && equipments.length > 0) {
       setList(equipments);
     } else {
-      const liveUrl =
-        process.env.NEXT_PUBLIC_API_URL && !process.env.NEXT_PUBLIC_API_URL.includes("localhost")
-          ? process.env.NEXT_PUBLIC_API_URL
-          : "https://equip-rent-server-sepia.vercel.app";
+      const liveUrl = getApiUrl();
       fetch(`${liveUrl}/api/equipments/featured`)
         .then((r) => r.json())
         .then((data) => {

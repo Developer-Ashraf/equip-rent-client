@@ -2,7 +2,7 @@ export const dynamic = "force-dynamic";
 
 import AllEquipmentClient from "./AllEquipmentClient";
 import { Equipment } from "@/types";
-import { getApiUrl } from "@/lib/server";
+import { getApiUrl } from "@/lib/api-config";
 
 interface PageProps {
   searchParams: Promise<{

@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Equipment } from "@/types";
 import EquipmentCard from "@/components/equipment/EquipmentCard";
 import { Search, SlidersHorizontal, ArrowUpDown } from "lucide-react";
+import { getApiUrl } from "@/lib/api-config";
 
 interface AllEquipmentClientProps {
   initialEquipments: Equipment[];
@@ -36,10 +37,7 @@ export default function AllEquipmentClient({
       setEquipmentsList(initialEquipments);
       setTotalCount(total);
     } else {
-      const liveUrl =
-        process.env.NEXT_PUBLIC_API_URL && !process.env.NEXT_PUBLIC_API_URL.includes("localhost")
-          ? process.env.NEXT_PUBLIC_API_URL
-          : "https://equip-rent-server-sepia.vercel.app";
+      const liveUrl = getApiUrl();
       fetch(`${liveUrl}/api/equipments`)
         .then((r) => r.json())
         .then((data) => {

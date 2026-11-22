@@ -15,6 +15,7 @@ import {
   Loader2,
 } from "lucide-react";
 import toast from "react-hot-toast";
+import { getApiUrl } from "@/lib/api-config";
 
 export default function AddEquipmentPage() {
   const router = useRouter();
@@ -68,7 +69,7 @@ export default function AddEquipmentPage() {
       const sessionRes = await (authClient as any).getSession();
       const token = sessionRes?.data?.session?.token;
 
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://equip-rent-server-sepia.vercel.app";
+      const apiUrl = getApiUrl();
       const res = await fetch(`${apiUrl}/api/equipments`, {
         method: "POST",
         headers: {

@@ -8,6 +8,7 @@ import { Save, Loader2, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import { authClient } from "@/lib/auth-client";
+import { getApiUrl } from "@/lib/api-config";
 
 interface EditEquipmentClientProps {
   equipment: Equipment;
@@ -62,7 +63,7 @@ export default function EditEquipmentClient({
       const sessionRes = await (authClient as any).getSession();
       const token = sessionRes?.data?.session?.token;
 
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://equip-rent-server-sepia.vercel.app";
+      const apiUrl = getApiUrl();
       const res = await fetch(`${apiUrl}/api/equipments/${equipment._id}`, {
         method: "PUT",
         headers: {

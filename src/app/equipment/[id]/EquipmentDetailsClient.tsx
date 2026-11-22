@@ -21,6 +21,7 @@ import {
   User,
 } from "lucide-react";
 import toast from "react-hot-toast";
+import { getApiUrl } from "@/lib/api-config";
 
 interface EquipmentDetailsClientProps {
   equipment: Equipment;
@@ -47,7 +48,7 @@ export default function EquipmentDetailsClient({
 
     setIsFavoriteLoading(true);
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://equip-rent-server-sepia.vercel.app";
+      const apiUrl = getApiUrl();
       const res = await fetch(`${apiUrl}/api/favorites`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },

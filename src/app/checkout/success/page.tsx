@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { CheckCircle2, AlertTriangle, ArrowRight, Loader2, Calendar, FileText } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
+import { getApiUrl } from "@/lib/api-config";
 
 function CheckoutSuccessContent() {
   const searchParams = useSearchParams();
@@ -26,7 +27,7 @@ function CheckoutSuccessContent() {
       }
 
       try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://equip-rent-server-sepia.vercel.app";
+        const apiUrl = getApiUrl();
         const res = await fetch(`${apiUrl}/api/payments/verify`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
