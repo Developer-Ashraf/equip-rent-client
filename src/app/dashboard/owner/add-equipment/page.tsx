@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
+import { authClient } from "@/lib/auth-client";
 import {
   PackagePlus,
   Image as ImageIcon,
@@ -64,14 +65,22 @@ export default function AddEquipmentPage() {
     setLoading(true);
 
     try {
+      const sessionRes = await authClient.getSession();
+      const token = sessionRes?.data?.session?.token;
+
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
       const res = await fetch(`${apiUrl}/api/equipments`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
         credentials: "include",
         body: JSON.stringify({
           ...formData,
+          rentalPrice: Number(formData.price),
           price: Number(formData.price),
+          availableQuantity: Number(formData.quantity),
           quantity: Number(formData.quantity),
         }),
       });
@@ -81,7 +90,7 @@ export default function AddEquipmentPage() {
         throw new Error(data.message || "Failed to add equipment");
       }
 
-      toast.success("Equipment listed successfully! Awaiting admin verification.");
+      toast.success("Equipment listed successfully!");
       router.push("/dashboard/owner/my-equipment");
     } catch (err: any) {
       toast.error(err.message || "Something went wrong adding equipment");

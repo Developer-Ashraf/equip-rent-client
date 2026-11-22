@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { User, Mail, Shield, Phone, MapPin, CheckCircle, Save, Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
+import { authClient } from "@/lib/auth-client";
 
 interface ProfileClientProps {
   user: any;
@@ -20,11 +21,17 @@ export default function ProfileClient({ user }: ProfileClientProps) {
     setIsSaving(true);
 
     try {
+      const sessionRes = await authClient.getSession();
+      const token = sessionRes?.data?.session?.token;
+
       // We can update user info via an API or auth update
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
       const res = await fetch(`${apiUrl}/api/user/profile`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
         credentials: "include",
         body: JSON.stringify({ name, phone, address, image }),
       });

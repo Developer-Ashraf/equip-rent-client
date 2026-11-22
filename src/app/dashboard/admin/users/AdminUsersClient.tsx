@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { User, Shield, CheckCircle, Mail, Calendar } from "lucide-react";
 import toast from "react-hot-toast";
+import { authClient } from "@/lib/auth-client";
 
 interface AdminUsersClientProps {
   initialUsers: any[];
@@ -16,10 +17,16 @@ export default function AdminUsersClient({ initialUsers }: AdminUsersClientProps
     setUpdatingId(userId);
 
     try {
+      const sessionRes = await authClient.getSession();
+      const token = sessionRes?.data?.session?.token;
+
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
       const res = await fetch(`${apiUrl}/api/admin/users/${userId}/role`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
         credentials: "include",
         body: JSON.stringify({ role: newRole }),
       });

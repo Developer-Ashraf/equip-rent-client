@@ -12,7 +12,7 @@ export default async function OwnerMyEquipmentPage() {
     const res = await authFetch("/api/owner/my-equipment");
     if (res.ok) {
       const data = await res.json();
-      equipments = data.equipments || [];
+      equipments = Array.isArray(data) ? data : (data.equipments || data.items || []);
     }
   } catch (error) {
     console.error("Failed to load owner equipment:", error);

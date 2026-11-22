@@ -7,6 +7,7 @@ import { Equipment } from "@/types";
 import { Save, Loader2, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import toast from "react-hot-toast";
+import { authClient } from "@/lib/auth-client";
 
 interface EditEquipmentClientProps {
   equipment: Equipment;
@@ -58,15 +59,23 @@ export default function EditEquipmentClient({
     setLoading(true);
 
     try {
+      const sessionRes = await authClient.getSession();
+      const token = sessionRes?.data?.session?.token;
+
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
       const res = await fetch(`${apiUrl}/api/equipments/${equipment._id}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
         credentials: "include",
         body: JSON.stringify({
           ...formData,
           price: Number(formData.price),
+          rentalPrice: Number(formData.price),
           quantity: Number(formData.quantity),
+          availableQuantity: Number(formData.quantity),
         }),
       });
 

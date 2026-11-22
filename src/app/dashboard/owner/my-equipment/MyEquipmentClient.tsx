@@ -6,6 +6,7 @@ import Image from "next/image";
 import { Equipment } from "@/types";
 import { Edit2, Trash2, ExternalLink, PlusCircle, Package } from "lucide-react";
 import toast from "react-hot-toast";
+import { authClient } from "@/lib/auth-client";
 
 interface MyEquipmentClientProps {
   initialEquipments: Equipment[];
@@ -24,9 +25,15 @@ export default function MyEquipmentClient({
 
     setDeletingId(id);
     try {
+      const sessionRes = await authClient.getSession();
+      const token = sessionRes?.data?.session?.token;
+
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
       const res = await fetch(`${apiUrl}/api/equipments/${id}`, {
         method: "DELETE",
+        headers: {
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
         credentials: "include",
       });
 

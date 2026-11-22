@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Equipment } from "@/types";
 import { Check, X, Trash2, ExternalLink, ShieldCheck } from "lucide-react";
 import toast from "react-hot-toast";
+import { authClient } from "@/lib/auth-client";
 
 interface AdminEquipmentsClientProps {
   initialEquipments: Equipment[];
@@ -20,10 +21,16 @@ export default function AdminEquipmentsClient({
   const handleStatusUpdate = async (id: string, newStatus: string) => {
     setProcessingId(id);
     try {
+      const sessionRes = await authClient.getSession();
+      const token = sessionRes?.data?.session?.token;
+
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
       const res = await fetch(`${apiUrl}/api/equipments/${id}/status`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
         credentials: "include",
         body: JSON.stringify({ status: newStatus }),
       });
@@ -51,9 +58,15 @@ export default function AdminEquipmentsClient({
 
     setProcessingId(id);
     try {
+      const sessionRes = await authClient.getSession();
+      const token = sessionRes?.data?.session?.token;
+
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
       const res = await fetch(`${apiUrl}/api/equipments/${id}`, {
         method: "DELETE",
+        headers: {
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
         credentials: "include",
       });
 
