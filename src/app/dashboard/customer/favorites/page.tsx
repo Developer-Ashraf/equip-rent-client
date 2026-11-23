@@ -11,7 +11,7 @@ export default async function CustomerFavoritesPage() {
     const res = await authFetch("/api/favorites");
     if (res.ok) {
       const data = await res.json();
-      favorites = data.favorites || [];
+      favorites = Array.isArray(data) ? data : (data.favorites || data.items || []);
     }
   } catch (error) {
     console.error("Failed to load customer favorites:", error);
