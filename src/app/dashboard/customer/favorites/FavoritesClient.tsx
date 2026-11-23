@@ -46,8 +46,19 @@ export default function FavoritesClient({ initialFavorites }: FavoritesClientPro
     }
   }, [initialFavorites]);
 
-  const handleRemove = async (equipmentId: string) => {
-    setRemovingId(equipmentId);
+  const handleRemove = async (favId: string, eqId: string) => {
+    const targetId = favId || eqId;
+    setRemovingId(targetId);
+
+    // Optimistically update state immediately without page reload
+    setFavorites((prev) =>
+      prev.filter((f) => {
+        const fFavId = f._id ? f._id.toString() : "";
+        const fEqId = (f.equipmentId || f.equipment?._id || f._id)?.toString();
+        return fFavId !== favId && fEqId !== eqId && fFavId !== targetId && fEqId !== targetId;
+      })
+    );
+
     try {
       let token = "";
       let userEmail = "";
@@ -58,7 +69,7 @@ export default function FavoritesClient({ initialFavorites }: FavoritesClientPro
       } catch {}
 
       const apiUrl = getApiUrl();
-      const res = await fetch(`${apiUrl}/api/favorites/${equipmentId}`, {
+      const res = await fetch(`${apiUrl}/api/favorites/${targetId}`, {
         method: "DELETE",
         headers: {
           ...(token ? { Authorization: `Bearer ${token}` } : {}),
@@ -71,7 +82,6 @@ export default function FavoritesClient({ initialFavorites }: FavoritesClientPro
         throw new Error("Failed to remove favorite");
       }
 
-      setFavorites((prev) => prev.filter((item) => (item.equipment?._id || item.equipmentId) !== equipmentId));
       toast.success("Removed from saved favorites");
     } catch (err: any) {
       toast.error(err.message || "Failed to remove favorite");
@@ -86,11 +96,12 @@ export default function FavoritesClient({ initialFavorites }: FavoritesClientPro
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {favorites.map((fav) => {
             const item = fav.equipment || fav;
-            const itemId = item._id || fav.equipmentId;
+            const favId = fav._id ? fav._id.toString() : "";
+            const eqId = (fav.equipmentId || fav.equipment?._id || favId)?.toString();
 
             return (
               <div
-                key={fav._id || itemId}
+                key={favId || eqId}
                 className="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col"
               >
                 <div className="relative aspect-video w-full bg-slate-900">
@@ -102,8 +113,8 @@ export default function FavoritesClient({ initialFavorites }: FavoritesClientPro
                   />
                   <div className="absolute top-3 right-3">
                     <button
-                      onClick={() => handleRemove(itemId)}
-                      disabled={removingId === itemId}
+                      onClick={() => handleRemove(favId, eqId)}
+                      disabled={removingId === favId || removingId === eqId}
                       className="p-2 rounded-xl bg-white/90 backdrop-blur-md text-red-500 hover:bg-white hover:text-red-600 transition-colors shadow-sm cursor-pointer disabled:opacity-50"
                       title="Remove from favorites"
                     >
@@ -137,7 +148,7 @@ export default function FavoritesClient({ initialFavorites }: FavoritesClientPro
                     </div>
 
                     <Link
-                      href={`/equipment/${item.equipmentId || itemId}`}
+                      href={`/equipment/${item.equipmentId || eqId}`}
                       className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs transition-colors shadow-sm"
                     >
                       Book Now <ArrowRight className="w-3.5 h-3.5" />
