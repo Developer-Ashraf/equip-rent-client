@@ -50,11 +50,23 @@ export default function RegisterPage() {
 
       if (res.error) {
         toast.error(res.error.message || "Registration failed!");
-      } else {
-        toast.success("Account created successfully!");
-        router.push(role === "owner" ? "/dashboard/owner" : "/dashboard/customer");
-        router.refresh();
+        return;
       }
+
+      toast.success("Account created successfully! Logging you in...");
+
+      // Automatically sign in to establish persistent session & cookies on both client and server
+      try {
+        await signIn.email({
+          email,
+          password,
+        });
+      } catch (signInErr) {
+        console.warn("Auto-signin error after signup:", signInErr);
+      }
+
+      const targetUrl = role === "owner" ? "/dashboard/owner" : "/dashboard/customer";
+      window.location.href = targetUrl;
     } catch (err: any) {
       toast.error(err.message || "Something went wrong during registration");
     } finally {

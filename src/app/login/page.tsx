@@ -39,8 +39,7 @@ function LoginForm() {
         toast.error(res.error.message || "Invalid credentials!");
       } else {
         toast.success("Welcome back! Logged in successfully.");
-        router.push(callbackUrl);
-        router.refresh();
+        window.location.href = callbackUrl;
       }
     } catch (err: any) {
       toast.error(err.message || "Sign in failed");

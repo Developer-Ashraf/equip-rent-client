@@ -1,7 +1,7 @@
 export const dynamic = "force-dynamic";
 
 import { getSession, getApiUrl } from "@/lib/server";
-import { redirect, notFound } from "next/navigation";
+import { notFound } from "next/navigation";
 import EquipmentDetailsClient from "./EquipmentDetailsClient";
 import { Equipment } from "@/types";
 
@@ -34,15 +34,11 @@ export default async function EquipmentDetailsPage({ params }: PageProps) {
 
   const session = await getSession();
 
-  if (!session?.user) {
-    redirect(`/login?callbackUrl=/equipment/${id}`);
-  }
-
   return (
     <EquipmentDetailsClient
       equipment={equipment}
-      user={session.user}
-      userToken={session.session?.token}
+      user={session?.user || null}
+      userToken={session?.session?.token}
     />
   );
 }
