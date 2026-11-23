@@ -5,6 +5,7 @@ import { Equipment } from "@/types";
 import { X, Calendar, MapPin, Phone, FileText, AlertCircle, Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
 import { getApiUrl } from "@/lib/api-config";
+import { authClient } from "@/lib/auth-client";
 
 interface BookingModalProps {
   equipment: Equipment;
@@ -75,12 +76,23 @@ export default function BookingModal({
     setIsLoading(true);
 
     try {
+      let token = userToken;
+      let userEmail = "";
+      try {
+        const sessionRes = await (authClient as any).getSession();
+        if (sessionRes?.data?.session?.token) {
+          token = sessionRes.data.session.token;
+        }
+        userEmail = sessionRes?.data?.user?.email || "";
+      } catch {}
+
       const apiUrl = getApiUrl();
       const res = await fetch(`${apiUrl}/api/bookings/create-checkout-session`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${userToken || ""}`,
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          ...(userEmail ? { "x-user-email": userEmail } : {}),
         },
         credentials: "include",
         body: JSON.stringify({
@@ -100,6 +112,8 @@ export default function BookingModal({
           contactNumber: phone,
           notes,
           additionalNotes: notes,
+          token,
+          userEmail,
         }),
       });
 

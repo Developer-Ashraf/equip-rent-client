@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { getApiUrl } from "@/lib/api-config";
+import { authClient } from "@/lib/auth-client";
 
 interface EquipmentDetailsClientProps {
   equipment: Equipment;
@@ -48,12 +49,38 @@ export default function EquipmentDetailsClient({
 
     setIsFavoriteLoading(true);
     try {
+      let token = userToken;
+      let userEmail = user?.email || "";
+      try {
+        const sessionRes = await (authClient as any).getSession();
+        if (sessionRes?.data?.session?.token) {
+          token = sessionRes.data.session.token;
+        }
+        if (sessionRes?.data?.user?.email) {
+          userEmail = sessionRes.data.user.email;
+        }
+      } catch {}
+
       const apiUrl = getApiUrl();
       const res = await fetch(`${apiUrl}/api/favorites`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          ...(userEmail ? { "x-user-email": userEmail } : {}),
+        },
         credentials: "include",
-        body: JSON.stringify({ equipmentId: equipment._id }),
+        body: JSON.stringify({
+          equipmentId: equipment._id,
+          equipmentName: equipment.name,
+          category: equipment.category,
+          rentalPrice: equipment.price || equipment.rentalPrice,
+          rentalType: equipment.rentalType,
+          image: equipment.image,
+          location: equipment.location,
+          token,
+          userEmail,
+        }),
       });
 
       const data = await res.json();
