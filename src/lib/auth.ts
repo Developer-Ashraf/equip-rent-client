@@ -44,6 +44,14 @@ export const auth = betterAuth({
     requireEmailVerification: false,
     autoSignIn: true,
   },
+  account: {
+    accountLinking: {
+      enabled: true,
+      trustedProviders: ["google", "github"],
+      allowDifferentEmails: true,
+      requireLocalEmailVerified: false,
+    },
+  },
   trustedOrigins: [
     "http://localhost:3000",
     "http://localhost:3001",
@@ -82,6 +90,7 @@ export const auth = betterAuth({
       clientId: GITHUB_CLIENT_ID,
       clientSecret: GITHUB_CLIENT_SECRET,
       enabled: true,
+      scope: ["read:user", "user:email"],
     },
   },
   database: mongodbAdapter(db, {
