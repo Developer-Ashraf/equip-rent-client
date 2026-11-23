@@ -11,20 +11,8 @@ export const { signIn, signUp, signOut, useSession } = authClient;
 
 export const loginWithSocial = async (provider: "google" | "github", callbackURL = "/") => {
   try {
-    const res: any = await signIn.social({
-      provider,
-      callbackURL,
-    });
-    if (res?.data?.url) {
-      window.location.href = res.data.url;
-      return;
-    }
-  } catch (e) {
-    console.warn("Better-auth social client notice:", e);
-  }
-
-  try {
-    const response = await fetch("/api/auth/sign-in/social", {
+    const origin = typeof window !== "undefined" ? window.location.origin : "https://equip-rent-client-nine.vercel.app";
+    const response = await fetch(`${origin}/api/auth/sign-in/social`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ provider, callbackURL }),
@@ -32,8 +20,21 @@ export const loginWithSocial = async (provider: "google" | "github", callbackURL
     const data = await response.json();
     if (data?.url) {
       window.location.href = data.url;
+      return;
     }
   } catch (err) {
-    console.error("Social redirect failed:", err);
+    console.warn("Direct social fetch notice:", err);
+  }
+
+  try {
+    const res: any = await signIn.social({
+      provider,
+      callbackURL,
+    });
+    if (res?.data?.url) {
+      window.location.href = res.data.url;
+    }
+  } catch (e) {
+    console.error("Social redirect failed:", e);
   }
 };
