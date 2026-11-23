@@ -49,7 +49,12 @@ export default function RegisterPage() {
       } as any);
 
       if (res.error) {
-        toast.error(res.error.message || "Registration failed!");
+        const errorMsg =
+          res.error.message ||
+          (res.error as any)?.error?.message ||
+          (res.error as any)?.statusText ||
+          "Registration failed! This email might already be registered.";
+        toast.error(errorMsg);
         return;
       }
 
